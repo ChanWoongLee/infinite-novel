@@ -1,0 +1,105 @@
+name: for gitops
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branched:
+      - develop
+
+jobs:
+  docker-build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.image.outputs.version }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Get verion
+        id: image
+        run: |
+          VERSION=$(echo ${{ github.sha }} | cut -c1-8)
+          echo VERSION=$VERSION
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+
+      # - run: |
+      #     yarn install --frozen-lockfile
+
+      # - name: Run unit tests
+      #   run: yarn test:e2e
+
+      - name: Login to GitHub Packages Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/infinite-novel:${{ steps.image.outputs.version }}
+
+  update-manifest:
+    runs-on: ubuntu-latest
+    needs: docker-build-and-push
+    steps:
+      - name: Checkout kube-manifest repository
+        uses: actions/checkout@v3
+        with:
+          repository: ChanWoongLee/kube-manifest
+          token: ${{ secrets.ACTION_TOKEN }}
+          ref: infinite-novel
+
+      - name: cat yaml
+        run: cat infinite-novel.yaml
+
+      - name: update yaml with yq
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq '( select(di == 1) | .spec.template.spec.containers[0].image ) = "${{ secrets.DOCKERHUB_USERNAME }}/infinite-novel:${{ needs.docker-build-and-push.outputs.version }}"' -i   'infinite-novel.yaml'
+
+      - name: Commit andpush files
+        run: |
+          git config --global user.email "dlcksdnd6785@naver.com"
+          git config --global user.name "ChanWoongLee"
+          git add .
+          git commit -am "update kube-manifest"
+          git push -u origin infinite-novel
+
+      # - name: Test Success
+      #   uses: rjstone/discord-webhook-notify@v1
+      #   if: success()
+      #   with:
+      #     severity: info
+      #     details: Github Action Succeeded!
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      # - name: Test Failure
+      #   uses: rjstone/discord-webhook-notify@v1
+      #   if: failure()
+      #   with:
+      #     severity: error
+      #     details: Github Action Failed!
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      # - name: Test Cancelled
+      #   uses: rjstone/discord-webhook-notify@v1
+      #   if: cancelled()
+      #   with:
+      #     severity: warn
+      #     details: Github Action Cancelled!
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
