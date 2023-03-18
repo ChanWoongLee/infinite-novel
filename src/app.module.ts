@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { config } from 'dotenv';
+import { NovelModule } from './novel/novel.module';
 
 config();
 @Module({
@@ -13,6 +14,7 @@ config();
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.DB_URL, { dbName: 'infinite-novel' }),
     UsersModule,
+    NovelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

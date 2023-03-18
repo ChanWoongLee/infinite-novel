@@ -9,6 +9,7 @@ import {
   Query,
   Req,
   UseGuards,
+  Render,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -21,7 +22,14 @@ export class AppController {
     throw new Error('Method not implemented.');
   }
   @Get()
-  findAll(): string {
-    return 'Main Page!';
+  @Render('view.ejs')
+  async view() {
+    let novel: any[] = [
+      { title: '어린왕자', count: 4 },
+      { title: '슬램덩크', count: 3 },
+    ];
+    console.log(novel);
+    return { novelList: novel };
+    //return { name: 'peter', age: 28, job: 'software engineer' };
   }
 }
