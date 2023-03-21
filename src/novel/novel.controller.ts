@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   Render,
+  Res,
 } from '@nestjs/common';
 import { NovelService } from './novel.service';
 import { CreateNovelDto } from './dto/create-novel.dto';
@@ -20,8 +21,18 @@ export class NovelController {
 
   // @UseGuards(AuthGuard('google'))
   @Post()
-  async create(@Body() createNovelDto: CreateNovelDto) {
-    return await this.novelService.create(createNovelDto);
+  async create(@Body() createNovelDto: CreateNovelDto, @Res() res) {
+    await this.novelService.create(createNovelDto);
+    res.redirect('/novel');
+  }
+
+  @Get()
+  @Render('view.ejs')
+  async findAll() {
+    const novelList = await this.novelService.findAll();
+    return {
+      novelList,
+    };
   }
 
   @Get(':id')

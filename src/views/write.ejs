@@ -45,18 +45,17 @@
     <ul class="list-group">
       <% for(var i = 0; i < novelList.length; i++) { %>
       <li class="list-group-item">
-        <h4>
-          소설 제목: <%= novelList[i].title %>(<%= novelList[i].content %>개)
-        </h4>
+        <h4> <%= novelList[i].content %> </h4>
       </li>
       <% } %>
     </ul>
 
     <div class="container mt-3">
-      <form action="/add" method="POST">
+      <form action="/sentence" method="POST">
         <div class="form-group">
           <label>이어 쓰기</label>
-          <input type="text" class="form-control" name="title" />
+          <input type="text" class="form-control" name="content" />
+          <input type="hidden" name="novelId" value="<%= novelId %>" />
         </div>
         <button type="submit" class="btn btn-outline-secondary">Submit</button>
       </form>

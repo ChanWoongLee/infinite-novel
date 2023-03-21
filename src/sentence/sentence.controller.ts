@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Render,
+  Res,
 } from '@nestjs/common';
 import { SentenceService } from './sentence.service';
 import { CreateSentenceDto } from './create-sentence.dto';
@@ -15,8 +16,12 @@ export class SentenceController {
   constructor(private readonly sentenceService: SentenceService) {}
 
   @Post()
-  async createSentence(@Body() createSentenceDto: CreateSentenceDto) {
-    return await this.sentenceService.createSentence(createSentenceDto);
+  async createSentence(
+    @Body() createSentenceDto: CreateSentenceDto,
+    @Res() res,
+  ) {
+    await this.sentenceService.createSentence(createSentenceDto);
+    res.redirect('/sentence/write/' + createSentenceDto.novelId);
   }
 
   @Get()
@@ -27,8 +32,8 @@ export class SentenceController {
   @Get('write/:novelId')
   @Render('write.ejs')
   async findByNovel(@Param('novelId') novelId: string) {
-    let novel: any[] = await this.sentenceService.findByNovel(novelId);
-    return { novelList: novel };
+    const novel = await this.sentenceService.findByNovel(novelId);
+    return { novelList: novel, novelId: novelId };
   }
 
   @Delete('/:novelId')
