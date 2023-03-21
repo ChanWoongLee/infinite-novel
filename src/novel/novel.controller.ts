@@ -19,22 +19,22 @@ export class NovelController {
 
   // @UseGuards(AuthGuard('google'))
   @Post()
-  create(@Body() createNovelDto: CreateNovelDto) {
-    return this.novelService.create(createNovelDto);
+  async create(@Body() createNovelDto: CreateNovelDto) {
+    return await this.novelService.create(createNovelDto);
   }
 
   @Get()
-  findAll() {
-    return this.novelService.findAll();
+  async findAll() {
+    return await this.novelService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.novelService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return await this.novelService.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.novelService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.novelService.remove(id);
   }
 }

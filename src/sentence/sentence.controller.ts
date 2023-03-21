@@ -7,22 +7,22 @@ export class SentenceController {
   constructor(private readonly sentenceService: SentenceService) {}
 
   @Post()
-  createSentence(@Body() createSentenceDto: CreateSentenceDto) {
-    return this.sentenceService.createSentence(createSentenceDto);
+  async createSentence(@Body() createSentenceDto: CreateSentenceDto) {
+    return await this.sentenceService.createSentence(createSentenceDto);
   }
 
   @Get()
-  findAll() {
-    return this.sentenceService.findAll();
+  async findAll() {
+    return await this.sentenceService.findAll();
   }
 
   @Get('/:novelId')
-  findByNovel(@Param('novelId') novelId: string) {
-    return this.sentenceService.findByNovel(novelId);
+  async findByNovel(@Param('novelId') novelId: string) {
+    return await this.sentenceService.findByNovel(novelId);
   }
 
   @Delete('/:novelId')
-  deleteSentence(@Param('novelId') novelId: string) {
-    return this.sentenceService.deleteSentence(novelId);
+  async deleteSentence(@Param('novelId') novelId: string) {
+    return await this.sentenceService.deleteSentence(novelId);
   }
 }
