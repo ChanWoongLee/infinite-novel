@@ -1,26 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { CreateNovelDto } from './dto/create-novel.dto';
-import { UpdateNovelDto } from './dto/update-novel.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Novel } from './novel.schema';
+import { Model, ObjectId } from 'mongoose';
 
 @Injectable()
 export class NovelService {
+  constructor(
+    @InjectModel(Novel.name) private readonly novelModel: Model<Novel>,
+  ) {}
+
   create(createNovelDto: CreateNovelDto) {
-    return 'This action adds a new novel';
+    return this.novelModel.create(createNovelDto);
   }
 
-  findAll() {
-    return `This action returns all novel`;
+  async findAll() {
+    return this.novelModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} novel`;
+  async findOne(id: string) {
+    return this.novelModel.findById(id);
   }
 
-  update(id: number, updateNovelDto: UpdateNovelDto) {
-    return `This action updates a #${id} novel`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} novel`;
+  async remove(id: string) {
+    return this.novelModel.deleteOne({
+      _id: id,
+    });
   }
 }
