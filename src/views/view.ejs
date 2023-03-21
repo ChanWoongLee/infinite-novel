@@ -30,11 +30,21 @@
     <ul class="list-group">
       <% for(var i = 0; i < novelList.length; i++) { %>
       <li class="list-group-item">
-        <h4>소설 제목: <%= novelList[i].title %>(<%= novelList[i].count %>개)</h4>
-        <button class="relay-write"  data-id="<%= i %>">이어쓰기</button>
+        <h4>소설 제목: <%= novelList[i].title %></h4>
+        <a href="sentence/write/<%= novelList[i]._id %>" class="relay-write" data-id="<%= i %>" onclick="() => {}">이어쓰기</a>
       </li>
       <% } %>
     </ul>
+
+    <div class="container mt-3">
+      <form action="/novel" method="POST">
+        <div class="form-group">
+          <label>소설 만들기</label>
+          <input type="text" class="form-control" name="title" />
+        </div>
+        <button type="submit" class="btn btn-outline-secondary">Submit</button>
+      </form>
+    </div>
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
