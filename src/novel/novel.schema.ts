@@ -11,15 +11,10 @@ const options: SchemaOptions = {
 export class Novel extends Document {
   @Prop({
     required: true,
-    unique: true,
+    // unique: true,
   })
   @IsNotEmpty()
   title: string;
-
-  @Prop({})
-  @IsString()
-  @IsNotEmpty()
-  sentence: string[];
 
   readonly readOnlyData: {
     id: string;

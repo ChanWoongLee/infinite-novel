@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { config } from 'dotenv';
 import { NovelModule } from './novel/novel.module';
 import { MyPageModule } from './mypage/mypage.module';
+import { SentenceModule } from './sentence/sentence.module';
 
 config();
 @Module({
@@ -15,7 +16,8 @@ config();
     MongooseModule.forRoot(process.env.DB_URL, { dbName: 'infinite-novel' }),
     UsersModule,
     NovelModule,
-    MyPageModule
+    MyPageModule,
+    SentenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
