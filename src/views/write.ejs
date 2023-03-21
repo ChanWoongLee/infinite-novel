@@ -41,12 +41,15 @@
       </div>
     </nav>
 
-    <h4 class="container mt-4"><strong>소설 이어쓰기 작성 페이지</strong></h4>
+    <h4 class="container mt-4">
+      <strong>ദ്ദി*꒦ິ꒳꒦ີ) 소설 이어쓰기 작성 페이지 ദ്ദി*꒦ິ⌓꒦ີ)</strong>
+    </h4>
     <ul class="list-group">
       <% for(var i = 0; i < novelList.length; i++) { %>
       <li class="list-group-item">
         <h4>
-          소설 제목: <%= novelList[i].title %>(<%= novelList[i].content %>개)
+          <%=i%> 번째 이어쓴 내용 : <%= novelList[i].title %>(<%=
+          novelList[i].content %>개)
         </h4>
       </li>
       <% } %>
