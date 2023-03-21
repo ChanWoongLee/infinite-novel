@@ -16,11 +16,6 @@ export class Novel extends Document {
   @IsNotEmpty()
   title: string;
 
-  @Prop({
-    defaultOptions: 0,
-  })
-  totalCount: number;
-
   readonly readOnlyData: {
     id: string;
     title: string;
