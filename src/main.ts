@@ -16,6 +16,6 @@ async function bootstrap() {
   app.setViewEngine('ejs');
   //app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(3001);
+  await app.listen(3000);
 }
 bootstrap();
